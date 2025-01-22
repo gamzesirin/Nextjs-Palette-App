@@ -1,105 +1,116 @@
 'use client'
 
 import { useState } from 'react'
-import { Heart } from 'lucide-react'
-import { ColorPalette } from '../types'
 
 interface ColorCardProps {
-	palette: ColorPalette
-	onLike: (id: string) => void
+	palette: {
+		id: string
+		colors: string[]
+		tags: string[]
+	}
 }
 
-const hexToRgb = (hex: string) => {
-	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-	if (!result) return null
-	return `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})`
-}
+const ColorCard = ({ palette }: ColorCardProps) => {
+	const [copiedColor, setCopiedColor] = useState<string | null>(null)
 
-const ColorCard: React.FC<ColorCardProps> = ({ palette, onLike }) => {
-	const [copiedFormat, setCopiedFormat] = useState<{ color: string; format: 'hex' | 'rgb' } | null>(null)
-
-	const copyToClipboard = (color: string, format: 'hex' | 'rgb') => {
-		const colorValue = format === 'hex' ? color : hexToRgb(color)
-		navigator.clipboard.writeText(colorValue || '')
-		setCopiedFormat({ color, format })
-		setTimeout(() => setCopiedFormat(null), 2000)
+	const hexToRgb = (hex: string): string => {
+		hex = hex.replace('#', '')
+		const r = parseInt(hex.substring(0, 2), 16)
+		const g = parseInt(hex.substring(2, 4), 16)
+		const b = parseInt(hex.substring(4, 6), 16)
+		return `rgb(${r}, ${g}, ${b})`
 	}
 
-	const timeAgo = (date: Date) => {
-		if (typeof window === 'undefined') return '' // Sunucu tarafında boş string döndür
+	const copyColorToClipboard = async (color: string) => {
+		try {
+			await navigator.clipboard.writeText(color)
+			setCopiedColor(color)
 
-		const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
-		const intervals = {
-			year: 31536000,
-			month: 2592000,
-			week: 604800,
-			day: 86400,
-			hour: 3600,
-			minute: 60
+			setTimeout(() => {
+				setCopiedColor(null)
+			}, 2000)
+		} catch (err) {
+			console.error('Failed to copy color:', err)
 		}
-
-		for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-			const interval = Math.floor(seconds / secondsInUnit)
-			if (interval >= 1) {
-				return `${interval} ${unit}${interval === 1 ? '' : 's'} ago`
-			}
-		}
-		return 'just now'
 	}
 
 	return (
-		<div className="bg-white rounded-lg shadow-md overflow-hidden">
-			<div className="h-48 grid grid-rows-4">
-				{palette.colors.map((color, index) => (
-					<div
-						key={index}
-						className="w-full cursor-pointer relative group"
-						style={{ backgroundColor: color }}
-						onClick={() => copyToClipboard(color, 'hex')}
-					>
-						<div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
-							<div className="flex gap-2">
+		<div className="group relative">
+			{/* Ana Kart */}
+			<div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+				{/* Renk Paleti */}
+				<div className="grid grid-cols-5 h-40">
+					{palette.colors.map((color, index) => (
+						<div
+							key={index}
+							className="relative group/color cursor-pointer transition-transform hover:scale-105"
+							style={{ backgroundColor: color }}
+						>
+							{/* Renk Bilgisi Overlay */}
+							<div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover/color:opacity-100 bg-black/40 backdrop-blur-sm transition-all duration-200">
+								{/* HEX */}
 								<button
-									onClick={(e) => {
-										e.stopPropagation()
-										copyToClipboard(color, 'hex')
-									}}
-									className="bg-white px-2 py-1 rounded text-sm font-medium hover:bg-gray-100"
+									onClick={() => copyColorToClipboard(color)}
+									className="w-full h-1/2 flex items-center justify-center text-white text-xs md:text-sm font-mono hover:bg-white/10 transition-colors px-2 py-1"
 								>
-									{copiedFormat?.color === color && copiedFormat?.format === 'hex' ? 'Copied!' : color}
+									<span className="truncate">{color}</span>
 								</button>
+								{/* RGB */}
 								<button
-									onClick={(e) => {
-										e.stopPropagation()
-										copyToClipboard(color, 'rgb')
-									}}
-									className="bg-white px-2 py-1 rounded text-sm font-medium hover:bg-gray-100"
+									onClick={() => copyColorToClipboard(hexToRgb(color))}
+									className="w-full h-1/2 flex items-center justify-center text-white text-xs md:text-sm font-mono hover:bg-white/10 transition-colors px-2 py-1 border-t border-white/20"
 								>
-									{copiedFormat?.color === color && copiedFormat?.format === 'rgb' ? 'Copied!' : hexToRgb(color)}
+									<span className="truncate">{hexToRgb(color)}</span>
 								</button>
 							</div>
 						</div>
-					</div>
-				))}
-			</div>
-			<div className="p-4">
-				<div className="flex items-center justify-between mb-2">
-					<button
-						onClick={() => onLike(palette.id)}
-						className="flex items-center space-x-1 text-gray-600 hover:text-red-500"
-					>
-						<Heart className="h-4 w-4" />
-						<span className="text-sm">{palette.likes}</span>
-					</button>
-					<span className="text-sm text-gray-500">{timeAgo(palette.createdAt)}</span>
-				</div>
-				<div className="flex flex-wrap gap-1">
-					{palette.tags.map((tag) => (
-						<span key={tag} className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
-							{tag}
-						</span>
 					))}
 				</div>
+
+				{/* Etiketler */}
+				<div className="p-4">
+					<div className="flex flex-wrap gap-2">
+						{palette.tags.map((tag, index) => (
+							<span
+								key={index}
+								className="px-3 py-1 text-xs font-medium rounded-full 
+									 bg-gradient-to-r from-gray-50 to-gray-100 
+									 text-gray-600 hover:from-gray-100 hover:to-gray-200 
+									 transition-all duration-200 
+									 border border-gray-200/50 
+									 shadow-sm hover:shadow"
+							>
+								{tag}
+							</span>
+						))}
+					</div>
+				</div>
+			</div>
+
+			{/* Alt Tooltip */}
+			<div
+				className={`
+				absolute -bottom-2 left-1/2 transform -translate-x-1/2 translate-y-full 
+				transition-all duration-200 
+				bg-black text-white text-xs font-medium px-3 py-1.5 rounded-lg
+				shadow-lg pointer-events-none whitespace-nowrap
+				${copiedColor ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+			`}
+			>
+				{copiedColor ? (
+					<span className="flex items-center gap-1">
+						<svg className="w-3 h-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+						</svg>
+						Color copied to clipboard!
+					</span>
+				) : (
+					'Click to copy color code'
+				)}
+				<div
+					className="absolute -top-1 left-1/2 transform -translate-x-1/2 
+							  border-4 border-transparent border-b-black"
+				></div>
 			</div>
 		</div>
 	)

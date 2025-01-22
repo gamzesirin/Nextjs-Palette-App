@@ -1,13 +1,13 @@
 'use client'
 
-import ColorCard from '@/components/ColorCard'
-import Sidebar from '@/components/Sidebar'
-import { ColorPalette } from '@/types'
-import { useState, useEffect } from 'react'
 import { generateSamplePalettes } from '@/utils/colorPalettes'
+import ColorPalette from '@/components/ColorPalette'
+import Sidebar from '@/components/Sidebar'
+import { ColorPalette as ColorPaletteType } from '@/types'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
-	const [palettes, setPalettes] = useState<ColorPalette[]>([])
+	const [palettes, setPalettes] = useState<ColorPaletteType[]>([])
 	const [selectedTags, setSelectedTags] = useState<string[]>([])
 	const [searchTerm, setSearchTerm] = useState<string>('')
 
@@ -17,12 +17,6 @@ export default function Home() {
 
 	const handleFilterChange = (filter: string) => {
 		setSearchTerm(filter)
-	}
-
-	const handleLike = (paletteId: string) => {
-		setPalettes((prev) =>
-			prev.map((palette) => (palette.id === paletteId ? { ...palette, likes: palette.likes + 1 } : palette))
-		)
 	}
 
 	const handleTagSelect = (tag: string) => {
@@ -42,10 +36,10 @@ export default function Home() {
 		<div className="flex min-h-screen bg-gray-50">
 			<Sidebar onFilterChange={handleFilterChange} onTagSelect={handleTagSelect} selectedTags={selectedTags} />
 			<main className="flex-1 ml-64">
-				<div className="container mx-auto px-6 py-8">
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+				<div className="container mx-auto p-8">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
 						{filteredPalettes.map((palette) => (
-							<ColorCard key={palette.id} palette={palette} onLike={handleLike} />
+							<ColorPalette key={palette.id} palette={palette} />
 						))}
 					</div>
 				</div>

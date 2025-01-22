@@ -1,18 +1,14 @@
-import React from 'react'
+'use client'
+
 import ColorCard from './ColorCard'
+import { ColorPalette as ColorPaletteType } from '@/types'
 
 interface ColorPaletteProps {
-	colors: string[]
+	palette: ColorPaletteType
 }
 
-const ColorPalette: React.FC<ColorPaletteProps> = ({ colors }) => {
-	return (
-		<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-			{colors.map((color, index) => (
-				<ColorCard key={index} color={color} />
-			))}
-		</div>
-	)
+const ColorPalette = ({ palette }: ColorPaletteProps) => {
+	return <ColorCard palette={palette} />
 }
 
 export default ColorPalette
