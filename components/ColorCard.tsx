@@ -26,6 +26,8 @@ const ColorCard: React.FC<ColorCardProps> = ({ palette, onLike }) => {
 	}
 
 	const timeAgo = (date: Date) => {
+		if (typeof window === 'undefined') return '' // Sunucu tarafında boş string döndür
+
 		const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
 		const intervals = {
 			year: 31536000,

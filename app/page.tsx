@@ -5,59 +5,51 @@ import Sidebar from '@/components/Sidebar'
 import { ColorPalette } from '@/types'
 import { useState, useEffect } from 'react'
 
-// Sample data - in a real app, this would come from an API
 const generateSamplePalettes = (): ColorPalette[] => {
-	return Array.from({ length: 12 }, (_, i) => ({
-		id: `palette-${i}`,
-		colors: Array.from({ length: 4 }, () => '#' + Math.floor(Math.random() * 16777215).toString(16)),
-		likes: Math.floor(Math.random() * 5000),
-		createdAt: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000),
-		tags: ['Spring', 'Pastel', 'Light'].sort(() => Math.random() - 0.5).slice(0, 2)
-	}))
+	return [
+		{
+			id: '1',
+			colors: ['#FF5733', '#33FF57', '#5733FF'],
+			likes: 0,
+			tags: ['sıcak', 'canlı'],
+			createdAt: new Date()
+		}
+		// Diğer örnekler...
+	]
 }
 
 export default function Home() {
-	const [palettes, setPalettes] = useState<ColorPalette[]>(generateSamplePalettes())
+	const [palettes, setPalettes] = useState<ColorPalette[]>([])
 	const [selectedTags, setSelectedTags] = useState<string[]>([])
-	const [currentFilter, setCurrentFilter] = useState<string>('new')
+	const [currentFilter, setCurrentFilter] = useState<string>('')
+
+	useEffect(() => {
+		setPalettes(generateSamplePalettes())
+	}, [])
 
 	const handleFilterChange = (filter: string) => {
 		setCurrentFilter(filter)
-		const newPalettes = [...palettes]
+	}
 
-		switch (filter) {
-			case 'popular':
-				newPalettes.sort((a, b) => b.likes - a.likes)
-				break
-			case 'new':
-				newPalettes.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-				break
-			case 'random':
-				newPalettes.sort(() => Math.random() - 0.5)
-				break
-			default:
-				break
-		}
-
-		setPalettes(newPalettes)
+	const handleLike = (paletteId: string) => {
+		setPalettes((prev) =>
+			prev.map((palette) => (palette.id === paletteId ? { ...palette, likes: palette.likes + 1 } : palette))
+		)
 	}
 
 	const handleTagSelect = (tag: string) => {
 		setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
 	}
 
-	const handleLike = (id: string) => {
-		setPalettes((prev) =>
-			prev.map((palette) => (palette.id === id ? { ...palette, likes: palette.likes + 1 } : palette))
-		)
-	}
-
-	const filteredPalettes = palettes.filter(
-		(palette) => selectedTags.length === 0 || selectedTags.some((tag) => palette.tags.includes(tag))
-	)
+	const filteredPalettes = palettes.filter((palette) => {
+		const matchesFilter =
+			currentFilter === '' || palette.colors.some((color) => color.toLowerCase().includes(currentFilter.toLowerCase()))
+		const matchesTags = selectedTags.length === 0 || selectedTags.every((tag) => palette.tags.includes(tag))
+		return matchesFilter && matchesTags
+	})
 
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen bg-gray-50" suppressHydrationWarning>
 			<Sidebar onFilterChange={handleFilterChange} onTagSelect={handleTagSelect} selectedTags={selectedTags} />
 			<main className="pl-64">
 				<div className="container mx-auto px-6 py-8">

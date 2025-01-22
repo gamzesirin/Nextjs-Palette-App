@@ -9,10 +9,17 @@
 }
 
 body {
+	@apply antialiased;
 	color: rgb(var(--foreground-rgb));
 	background: rgb(var(--background-end-rgb));
 }
 
 .grid-rows-4 {
 	grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+
+/* VS Code ve diğer otomatik eklenen class'ları engelleyin */
+.vsc-initialized,
+.cz-shortcut-listen {
+	@apply !important;
 }
