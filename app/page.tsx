@@ -4,19 +4,7 @@ import ColorCard from '@/components/ColorCard'
 import Sidebar from '@/components/Sidebar'
 import { ColorPalette } from '@/types'
 import { useState, useEffect } from 'react'
-
-const generateSamplePalettes = (): ColorPalette[] => {
-	return [
-		{
-			id: '1',
-			colors: ['#FF5733', '#33FF57', '#5733FF'],
-			likes: 0,
-			tags: ['sıcak', 'canlı'],
-			createdAt: new Date()
-		}
-		// Diğer örnekler...
-	]
-}
+import { generateSamplePalettes } from '@/utils/colorPalettes'
 
 export default function Home() {
 	const [palettes, setPalettes] = useState<ColorPalette[]>([])

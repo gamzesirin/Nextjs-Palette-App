@@ -12,6 +12,8 @@ body {
 	@apply antialiased;
 	color: rgb(var(--foreground-rgb));
 	background: rgb(var(--background-end-rgb));
+	margin: 0;
+	padding: 0;
 }
 
 .grid-rows-4 {
@@ -19,7 +21,10 @@ body {
 }
 
 /* VS Code ve diğer otomatik eklenen class'ları engelleyin */
-.vsc-initialized,
-.cz-shortcut-listen {
-	@apply !important;
+*[class*='vsc-initialized'] {
+	display: none !important;
+}
+
+#app-root {
+	min-height: 100vh;
 }
