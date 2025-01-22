@@ -9,14 +9,14 @@ import { generateSamplePalettes } from '@/utils/colorPalettes'
 export default function Home() {
 	const [palettes, setPalettes] = useState<ColorPalette[]>([])
 	const [selectedTags, setSelectedTags] = useState<string[]>([])
-	const [currentFilter, setCurrentFilter] = useState<string>('')
+	const [searchTerm, setSearchTerm] = useState<string>('')
 
 	useEffect(() => {
 		setPalettes(generateSamplePalettes())
 	}, [])
 
 	const handleFilterChange = (filter: string) => {
-		setCurrentFilter(filter)
+		setSearchTerm(filter)
 	}
 
 	const handleLike = (paletteId: string) => {
@@ -30,10 +30,12 @@ export default function Home() {
 	}
 
 	const filteredPalettes = palettes.filter((palette) => {
-		const matchesFilter =
-			currentFilter === '' || palette.colors.some((color) => color.toLowerCase().includes(currentFilter.toLowerCase()))
 		const matchesTags = selectedTags.length === 0 || selectedTags.every((tag) => palette.tags.includes(tag))
-		return matchesFilter && matchesTags
+		const matchesSearch =
+			searchTerm === '' ||
+			palette.colors.some((color) => color.toLowerCase().includes(searchTerm.toLowerCase())) ||
+			palette.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+		return matchesTags && matchesSearch
 	})
 
 	return (

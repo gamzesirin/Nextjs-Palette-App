@@ -7,16 +7,25 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ onFilterChange, onTagSelect, selectedTags }: SidebarProps) => {
+	const handleSearch = (searchTerm: string) => {
+		// Boşlukları temizle ve küçük harfe çevir
+		const cleanedSearch = searchTerm.trim().toLowerCase()
+		onFilterChange(cleanedSearch)
+	}
+
 	return (
 		<div className="fixed left-0 top-0 h-full w-64 bg-white shadow-lg p-6 overflow-y-auto">
 			{/* Arama */}
 			<div className="mb-6">
-				<input
-					type="text"
-					placeholder="Search tags..."
-					className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500"
-					onChange={(e) => onFilterChange(e.target.value)}
-				/>
+				<div className="relative">
+					<input
+						type="text"
+						placeholder="Search colors or tags..."
+						className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500"
+						onChange={(e) => handleSearch(e.target.value)}
+					/>
+					<span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
+				</div>
 			</div>
 
 			{/* Ana Menü */}
