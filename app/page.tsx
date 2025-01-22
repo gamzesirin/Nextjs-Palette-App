@@ -49,9 +49,9 @@ export default function Home() {
 	})
 
 	return (
-		<div className="min-h-screen bg-gray-50" suppressHydrationWarning>
+		<div className="flex min-h-screen bg-gray-50">
 			<Sidebar onFilterChange={handleFilterChange} onTagSelect={handleTagSelect} selectedTags={selectedTags} />
-			<main className="pl-64">
+			<main className="flex-1 ml-64">
 				<div className="container mx-auto px-6 py-8">
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 						{filteredPalettes.map((palette) => (
