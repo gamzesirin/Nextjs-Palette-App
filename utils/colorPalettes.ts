@@ -2,7 +2,6 @@ import { ColorPalette } from '@/types'
 
 export const generateSamplePalettes = (): ColorPalette[] => {
 	return [
-		// Pastel Paletler
 		{
 			id: '1',
 			colors: ['#FFB5C2', '#FFE2E2', '#F6DFEB', '#DCEDF9', '#E8F3D6'],
@@ -18,7 +17,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-14')
 		},
 
-		// Neon Paletler
 		{
 			id: '3',
 			colors: ['#FF0099', '#00FF00', '#00FFFF', '#FF00FF', '#FE0000'],
@@ -34,7 +32,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-12')
 		},
 
-		// Vintage Paletler
 		{
 			id: '5',
 			colors: ['#DEB887', '#D2B48C', '#BC8F8F', '#F4A460', '#DAA520'],
@@ -50,7 +47,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-10')
 		},
 
-		// Doğa Temalı
 		{
 			id: '7',
 			colors: ['#228B22', '#32CD32', '#90EE90', '#98FB98', '#3CB371'],
@@ -66,7 +62,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-08')
 		},
 
-		// Minimal
 		{
 			id: '9',
 			colors: ['#FFFFFF', '#F5F5F5', '#DCDCDC', '#D3D3D3', '#C0C0C0'],
@@ -82,7 +77,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-06')
 		},
 
-		// Gold Temalı
 		{
 			id: '11',
 			colors: ['#FFD700', '#DAA520', '#B8860B', '#CD853F', '#D2691E'],
@@ -91,7 +85,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-05')
 		},
 
-		// Mevsimsel - Yaz
 		{
 			id: '12',
 			colors: ['#FF6B6B', '#4ECDC4', '#FFD93D', '#95E1D3', '#FF8B94'],
@@ -100,7 +93,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-04')
 		},
 
-		// Mevsimsel - Kış
 		{
 			id: '13',
 			colors: ['#A0B4C7', '#CBD5E1', '#E2E8F0', '#F1F5F9', '#94A3B8'],
@@ -109,7 +101,6 @@ export const generateSamplePalettes = (): ColorPalette[] => {
 			createdAt: new Date('2024-03-03')
 		},
 
-		// Retro
 		{
 			id: '14',
 			colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],

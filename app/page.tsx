@@ -1,41 +1,36 @@
 'use client'
 
-import { generateSamplePalettes } from '@/utils/colorPalettes'
-import { generateRandomPalettes } from '@/utils/colorGenerator'
 import ColorCard from '@/components/ColorCard'
 import Sidebar from '@/components/Sidebar'
-import { ColorPalette } from '@/types'
-import { useState } from 'react'
+import { usePaletteStore } from '@/store/usePaletteStore'
 
 export default function Home() {
-	const initialPalettes = generateSamplePalettes()
-	const [palettes, setPalettes] = useState<ColorPalette[]>(initialPalettes)
-	const [selectedTags, setSelectedTags] = useState<string[]>([])
-	const [searchTerm, setSearchTerm] = useState<string>('')
-	const [isRandomMode, setIsRandomMode] = useState(false)
+	const {
+		palettes,
+		selectedTags,
+		searchTerm,
+		isRandomMode,
+		setSearchTerm,
+		setSelectedTags,
+		generateRandomPalettes,
+		resetFilters
+	} = usePaletteStore()
 
 	const handleFilterChange = (filter: string) => {
 		if (isRandomMode) {
-			setIsRandomMode(false)
-			setPalettes(initialPalettes)
+			resetFilters()
 		}
 		setSearchTerm(filter)
 	}
 
 	const handleTagSelect = (tag: string) => {
 		if (isRandomMode) {
-			setIsRandomMode(false)
-			setPalettes(initialPalettes)
+			resetFilters()
 		}
-		setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
-	}
 
-	const handleRandomClick = () => {
-		setIsRandomMode(true)
-		setSelectedTags([])
-		setSearchTerm('')
-		const newPalettes = generateRandomPalettes()
-		setPalettes(newPalettes)
+		const newTags = selectedTags.includes(tag) ? selectedTags.filter((t: string) => t !== tag) : [...selectedTags, tag]
+
+		setSelectedTags(newTags)
 	}
 
 	const filteredPalettes = palettes.filter((palette) => {
@@ -52,17 +47,17 @@ export default function Home() {
 	})
 
 	return (
-		<div className="flex min-h-screen bg-gray-50">
+		<div className="flex min-h-screen bg-gray-100">
 			<Sidebar
 				onFilterChange={handleFilterChange}
 				onTagSelect={handleTagSelect}
-				onRandomClick={handleRandomClick}
+				onRandomClick={generateRandomPalettes}
 				selectedTags={selectedTags}
 				isRandomMode={isRandomMode}
 			/>
-			<main className="flex-1 ml-64">
-				<div className="container mx-auto p-8">
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
+			<main className="flex-1 p-4 lg:ml-64 lg:p-12">
+				<div className="max-w-8xl mx-auto">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 md:gap-10">
 						{filteredPalettes.map((palette) => (
 							<ColorCard key={palette.id} palette={palette} />
 						))}
