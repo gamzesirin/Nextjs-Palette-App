@@ -3,10 +3,12 @@
 interface SidebarProps {
 	onFilterChange: (filter: string) => void
 	onTagSelect: (tag: string) => void
+	onRandomClick: () => void
 	selectedTags: string[]
+	isRandomMode: boolean
 }
 
-const Sidebar = ({ onFilterChange, onTagSelect, selectedTags }: SidebarProps) => {
+const Sidebar = ({ onFilterChange, onTagSelect, onRandomClick, selectedTags, isRandomMode }: SidebarProps) => {
 	const handleSearch = (searchTerm: string) => {
 		// Boşlukları temizle ve küçük harfe çevir
 		const cleanedSearch = searchTerm.trim().toLowerCase()
@@ -16,35 +18,25 @@ const Sidebar = ({ onFilterChange, onTagSelect, selectedTags }: SidebarProps) =>
 	return (
 		<div className="fixed left-0 top-0 h-full w-64 bg-white shadow-lg p-6 overflow-y-auto">
 			{/* Arama */}
-			<div className="mb-6">
-				<div className="relative">
-					<input
-						type="text"
-						placeholder="Search colors or tags..."
-						className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500"
-						onChange={(e) => handleSearch(e.target.value)}
-					/>
-					<span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
-				</div>
+			<div className="mb-8">
+				<input
+					type="text"
+					placeholder="Search colors or tags..."
+					className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					onChange={(e) => handleSearch(e.target.value)}
+					disabled={isRandomMode}
+				/>
 			</div>
 
 			{/* Ana Menü */}
 			<div className="space-y-4 mb-8">
-				<button className="flex items-center space-x-2 text-gray-700 hover:text-blue-500 w-full">
-					<span className="w-5">🕒</span>
-					<span>New</span>
-				</button>
-				<button className="flex items-center space-x-2 text-gray-700 hover:text-blue-500 w-full">
-					<span className="w-5">❤️</span>
-					<span>Popular</span>
-				</button>
-				<button className="flex items-center space-x-2 text-gray-700 hover:text-blue-500 w-full">
+				<button
+					onClick={onRandomClick}
+					className={`flex items-center space-x-2 w-full transition-all duration-300 hover:scale-105
+						${isRandomMode ? 'text-blue-500 font-medium' : 'text-gray-700 hover:text-blue-500'}`}
+				>
 					<span className="w-5">🎲</span>
 					<span>Random</span>
-				</button>
-				<button className="flex items-center space-x-2 text-gray-700 hover:text-blue-500 w-full">
-					<span className="w-5">📁</span>
-					<span>Collection</span>
 				</button>
 			</div>
 

@@ -1,9 +1,9 @@
 export interface ColorPalette {
 	id: string
 	colors: string[]
+	tags: string[]
 	likes: number
 	createdAt: Date
-	tags: string[]
 }
 
 export interface Tag {
